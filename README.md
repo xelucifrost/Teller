@@ -21,7 +21,25 @@ tl;dr - this parses PDFs with pdfplumber into text, then runs a bunch of regex o
 	- [x] RBC Visa/MC
 	- [x] AMEX
 
+### To add FI support yourself
+1. Add a bank name to AccountType in `teller/model.py`, ex. BNS (Scotiabank ticker)
+2. Set the `debug` flag to `True` in `teller/pdf_processor.py`
+3. Create the corresponding dir in `statements/BNS`
+4. Drop BNS CC statements in there
+5. Create a new dict entry in the `regexes` dict in `teller/pdf_processor.py`
+6. Copy paste one of the existing regexes, we will tweak it later 
+7. Run it 
+8. Copy the output and grab the parts we care about (opening balance, closing balance, statement date range and transactions)
+9. Put it into a regex simulator like https://regex101.com/ or https://regexr.com/ or use the regex feature on your text editor
+10. Test every regex, modify until it grabs what we need
+11. Update the regex inside your new dict entry at `regexes['BNS']`
+12. Turn off `debug` flag in `teller/pdf_processor.py`, set to `False`
+13. Run it again, if it fails repeat step 9-11 until it works
+
+It shouldn't take long, it took me 5 minutes to add AMEX support once I got the workflow down.
+
 ### Future
+- Use more efficient regex, maybe 1 for all FIs but I'm lazy
 - Detect account type from statements instead of relying on directory structure
 - Docker support for ETL directly into CSV/Firefly III (although efforts are better spent on automated headless selenium .csv interval fetch)
 	- You would probably only use this tool once to get your old transactions out of PDFs since some banks stop offering .csvs past the recent 3-6 month window
