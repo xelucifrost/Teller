@@ -2,7 +2,7 @@
 
 Because some FIs don't let you download .csvs for transactions older than 6 months ago because ???, this abomination of a tool exists.
 
-tl;dr - this parses PDFs with pdfplumber into text, then run a bunch of regex on it to capture transactions with some sanity/validation checking to make sure we got all the transactions correct.
+tl;dr - this parses PDFs with pdfplumber into text, then runs a bunch of regex on it to capture transactions with some sanity/validation checking to make sure we got all the transactions correct.
 
 ### Features of this fork
 - Removed unneeded dependencies (The original repo actually only used PDFPlumber to parse, not sure why there was tabular left in there)
