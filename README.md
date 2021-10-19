@@ -29,7 +29,7 @@ tl;dr - this parses PDFs with pdfplumber into text, then runs a bunch of regex o
 5. Create a new dict entry in the `regexes` dict in `teller/pdf_processor.py`
 6. Copy paste one of the existing regexes, we will tweak it later 
 7. Run it 
-8. Copy the output and grab the parts we care about (opening balance, closing balance, statement date range and transactions)
+8. Copy the output and grab the parts we care about (opening balance, closing balance, statement date range and transactions) - *be careful not to paste your address/CC number into the simulator*
 9. Put it into a regex simulator like https://regex101.com/ or https://regexr.com/ or use the regex feature on your text editor
 10. Test every regex, modify until it grabs what we need
 11. Update the regex inside your new dict entry at `regexes['BNS']`
