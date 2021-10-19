@@ -4,7 +4,7 @@ Because some FIs don't let you download .csvs for transactions older than 6 mont
 
 tl;dr - this parses PDFs with pdfplumber into text, then runs a bunch of regex on it to capture transactions with some sanity/validation checking to make sure we got all the transactions correct.
 
-### Features of this fork
+## Features of this fork
 - Removed unneeded dependencies (The original repo actually only used PDFPlumber to parse, not sure why there was tabular left in there)
 - Removed support for savings/chequing accounts (you shouldn't be spending out of a chequing account anyway, should be for bill payments only)
 - Remove dependency on PDF filename for dates
@@ -21,7 +21,7 @@ tl;dr - this parses PDFs with pdfplumber into text, then runs a bunch of regex o
 	- [x] RBC Visa/MC
 	- [x] AMEX
 
-### To add FI support yourself
+## To add FI support yourself
 1. Add a bank name to AccountType in `teller/model.py`, ex. BNS (Scotiabank ticker)
 2. Set the `debug` flag to `True` in `teller/pdf_processor.py`
 3. Create the corresponding dir in `statements/BNS`
@@ -38,13 +38,13 @@ tl;dr - this parses PDFs with pdfplumber into text, then runs a bunch of regex o
 
 It shouldn't take long, it took me 5 minutes to add AMEX support once I got the workflow down.
 
-### Future
+## Future
 - Use more efficient regex, maybe 1 for all FIs but I'm lazy
 - Detect account type from statements instead of relying on directory structure
 - Docker support for ETL directly into CSV/Firefly III (although efforts are better spent on automated headless selenium .csv interval fetch)
 	- You would probably only use this tool once to get your old transactions out of PDFs since some banks stop offering .csvs past the recent 3-6 month window
 
-### How to use
+## How to use
 
 - Clone this repo
 - Use a venv
