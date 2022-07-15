@@ -3,6 +3,7 @@ import pdfplumber
 
 from pathlib import Path
 from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
 from teller.model import Transaction, AccountType
 
 TARGET_FI = 'BMO'
@@ -15,7 +16,7 @@ regexes = {
         'txn': (r"^(?P<dates>(?:\w{3}(\.|)+ \d{1,2} ){2})"
             r"(?P<description>.+)\s"
             r"(?P<amount>-?[\d,]+\.\d{2})(?P<cr>(\-|\s?CR))?"),
-        'startyear': r'PERIOD COVERED BY THIS STATEMENT\n.+(?P<year>-?\,.[0-9][0-9][0-9][0-9])',
+        'startyear': r'PERIOD COVERED BY THIS STATEMENT\n\w+\.\s{1}\d+\,\s{1}(?P<year>[0-9]{4})',
         'openbal': r'Previous Balance.*(?P<balance>-?\$[\d,]+\.\d{2})(?P<cr>(\-|\s?CR))?',
         'closingbal': r'(?:New) Balance,.* (?P<balance>-?\$[\d,]+\.\d{2})(?P<cr>(\-|\s?CR))?'
     },
@@ -81,6 +82,8 @@ def _parse_visa(pdf_path):
         opening_bal = _get_opening_bal(text, TARGET_FI)
         closing_bal = _get_closing_bal(text, TARGET_FI)
         # add_seconds = 0
+        
+        endOfYearWarning = True
 
         # debugging transaction mapping - all 3 regex in 'txn' have to find a result in order for it to be considered a 'match'
         for match in re.finditer(regexes[TARGET_FI]['txn'], text, re.MULTILINE):
@@ -90,13 +93,20 @@ def _parse_visa(pdf_path):
             date[0] = date[0].strip('.') # Aug. -> Aug
             date.append(str(year))
             date = ' '.join(date) # ['Aug', '10', '2021'] -> Aug 10 2021
-
+            
             try:
                 date = datetime.strptime(date, '%b %d %Y') # try Aug 10 2021 first
             except: # yes I know this is horrible, but this script runs once if you download your .csvs monthly, what do you want from me
                 date = datetime.strptime(date, '%m %d %Y') # if it fails, 08 10 2021
 
-            # checks credit balance regex
+            # need to account for current year (Jan) and previous year (Dec) in statements 
+            endOfYearCheck = date.strftime("%m")
+
+            if (endOfYearCheck == '12' and endOfYearWarning == False):
+                endOfYearWarning = True
+            if (endOfYearCheck == '01' and endOfYearWarning):
+                date = date + relativedelta(years = 1)
+
             if (match_dict['cr']):
                 print("Credit balance found in transaction: '%s'" % match_dict['amount'])
                 amount = -float("-" + match_dict['amount'].replace('$', '').replace(',', ''))

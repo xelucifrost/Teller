@@ -33,11 +33,12 @@ tl;dr - this parses PDFs with pdfplumber into text, then runs a bunch of regex o
 - Use a venv
 
 ```
-# linux
+# macOS/linux
 python3 -m venv venv
 source venv/bin/activate
 
 # windows
+python3 -m venv venv
 source venv/Scripts/activate
 ```
 

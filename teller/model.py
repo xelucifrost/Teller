@@ -1,6 +1,5 @@
 from enum import Enum
 
-
 class AccountType(Enum):
     AMEX = 'AMEX'
     TD = 'TD'
