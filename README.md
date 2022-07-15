@@ -21,23 +21,6 @@ tl;dr - this parses PDFs with pdfplumber into text, then runs a bunch of regex o
 	- [x] RBC Visa/MC
 	- [x] AMEX
 
-## To add FI support yourself
-1. Add a bank name to AccountType in `teller/model.py`, ex. BNS (Scotiabank ticker)
-2. Set the `debug` flag to `True` in `teller/pdf_processor.py`
-3. Create the corresponding dir in `statements/BNS`
-4. Drop BNS CC statements in there
-5. Create a new dict entry in the `regexes` dict in `teller/pdf_processor.py`
-6. Copy paste one of the existing regexes, we will tweak it later 
-7. Run it 
-8. Copy the output and grab the parts we care about (opening balance, closing balance, statement date range and transactions) - *be careful not to paste your address/CC number into the simulator*
-9. Put it into a regex simulator like https://regex101.com/ or https://regexr.com/ or use the regex feature on your text editor
-10. Test every regex, modify until it grabs what we need
-11. Update the regex inside your new dict entry at `regexes['BNS']`
-12. Turn off `debug` flag in `teller/pdf_processor.py`, set to `False`
-13. Run it again, if it fails repeat step 9-11 until it works
-
-It shouldn't take long, it took me 5 minutes to add AMEX support once I got the workflow down.
-
 ## Future
 - Use more efficient regex, maybe 1 for all FIs but I'm lazy
 - Detect account type from statements instead of relying on directory structure
@@ -50,6 +33,7 @@ It shouldn't take long, it took me 5 minutes to add AMEX support once I got the 
 - Use a venv
 
 ```
+# linux
 python3 -m venv venv
 source venv/bin/activate
 
@@ -63,7 +47,7 @@ source venv/Scripts/activate
 ```
 - Download all your e-statements (v boring)
 
-- Put the downloaded pdfs into the `statements/TD`, `statements/BMO`, `statements/RBC` directories.
+- Put the downloaded pdfs into the `statements/TD`, `statements/BMO`, `statements/RBC` directories depending on what FI the statements are for.
 
 ```
 statements
@@ -95,3 +79,58 @@ Now you can have fun running queries and feeling bad about your spending habits.
 ```
 SELECT sum(amount) FROM transactions WHERE description LIKE '%Dunbar Sushi%'
 ```
+
+## Debugging errors
+
+If you see:
+
+```
+Error for statements/BMO/eStatement_2019-05-07.pdf
+Discrepancy found, bad parse :(
+```
+
+1. Turn on debug mode in `teller/pdf_processor.py` by setting `debug = True`  
+2. Run it again just on the error statement by moving the other statements out of the dir or into a sub dir  
+3. Inspect the transactions displayed  
+
+![](screenshots/2022-07-14-23-23-39.png)
+
+As you can see, the dates are different so it's probably the date regex.
+
+![](screenshots/2022-07-14-23-25-06.png)
+
+This confirms that it is the date regex.
+
+![](screenshots/2022-07-14-23-26-19.png)
+
+After fixing the regex, we can see we can capture the dates again.
+
+![](screenshots/2022-07-14-23-27-11.png)
+
+Turn off the debug flag and re-run. As you can see, it works perfect now.
+
+Please note that you don't need to delete the .db file and recreate it. It will append new transcations automatically.
+![](screenshots/2022-07-14-23-28-40.png)
+
+Unfortunately, we can never have 100% correct bank statement regex since the bank changes it's formats slightly between statements.
+Not sure if its intentional or not, but it's very annoying.
+
+For data browsing sanity checks, I recommend sqlitebrowser: https://sqlitebrowser.org/
+
+
+## To add FI support yourself
+1. Add a bank name to AccountType in `teller/model.py`, ex. BNS (Scotiabank ticker)
+2. Set the `debug` flag to `True` in `teller/pdf_processor.py`
+3. Create the corresponding dir in `statements/BNS`
+4. Drop BNS CC statements in there
+5. Create a new dict entry in the `regexes` dict in `teller/pdf_processor.py`
+6. Copy paste one of the existing regexes, we will tweak it later 
+7. Run it 
+8. Copy the output and grab the parts we care about (opening balance, closing balance, statement date range and transactions) - *be careful not to paste your address/CC number into the simulator*
+9. Put it into a regex simulator like https://regex101.com/ or https://regexr.com/ or use the regex feature on your text editor
+10. Test every regex, modify until it grabs what we need
+11. Update the regex inside your new dict entry at `regexes['BNS']`
+12. Turn off `debug` flag in `teller/pdf_processor.py`, set to `False`
+13. Run it again, if it fails repeat step 9-11 until it works
+
+It shouldn't take long, it took me 5 minutes to add AMEX support once I got the workflow down.

@@ -5,14 +5,14 @@ from pathlib import Path
 from datetime import datetime, timedelta
 from teller.model import Transaction, AccountType
 
-TARGET_FI = 'AMEX'
+TARGET_FI = 'BMO'
 
 overrideDuplicates = True # True = assume all 'duplicate' transactions are valid
 debug = False # prints out one parsed PDF for you to manually test regex on
 
 regexes = {
     'BMO': {
-        'txn': (r"^(?P<dates>(?:\w{3}\. \d{1,2} ){2})"
+        'txn': (r"^(?P<dates>(?:\w{3}(\.|)+ \d{1,2} ){2})"
             r"(?P<description>.+)\s"
             r"(?P<amount>-?[\d,]+\.\d{2})(?P<cr>(\-|\s?CR))?"),
         'startyear': r'PERIOD COVERED BY THIS STATEMENT\n.+(?P<year>-?\,.[0-9][0-9][0-9][0-9])',
@@ -93,16 +93,18 @@ def _parse_visa(pdf_path):
 
             try:
                 date = datetime.strptime(date, '%b %d %Y') # try Aug 10 2021 first
-            except:
+            except: # yes I know this is horrible, but this script runs once if you download your .csvs monthly, what do you want from me
                 date = datetime.strptime(date, '%m %d %Y') # if it fails, 08 10 2021
 
+            # checks credit balance regex
             if (match_dict['cr']):
                 print("Credit balance found in transaction: '%s'" % match_dict['amount'])
                 amount = -float("-" + match_dict['amount'].replace('$', '').replace(',', ''))
             else:
                 amount = -float(match_dict['amount'].replace('$', '').replace(',', ''))
 
-            if ('$' in match_dict['description']):
+            # checks description regex
+            if ('$' in match_dict['description'] and TARGET_FI != 'BMO'): # BMO doesn't have $'s in their descriptions, so this is safe 
                 print("************" + match_dict['description'])
                 newAmount = re.search(r'(?P<amount>-?\$[\d,]+\.\d{2}-?)(?P<cr>(\-|\s?CR))?', match_dict['description'])
                 amount = -float(newAmount['amount'].replace('$', '').replace(',', ''))
