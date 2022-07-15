@@ -62,6 +62,7 @@ statements
     ...
 ```
 - Statement names don't matter, thanks to another fork we parse the PDF for the date
+- Set `TARGET_FI` to your directory name, ex. `TARGET_FI = 'BMO'`
 - Run it!
 
 ```
