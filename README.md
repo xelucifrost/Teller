@@ -4,6 +4,10 @@ Because some FIs don't let you download .csvs for transactions older than 6 mont
 
 tl;dr - this parses PDFs with pdfplumber into text, then runs a bunch of regex on it to capture transactions with some sanity/validation checking to make sure we got all the transactions correct.
 
+
+## Issues
+- Pre-commit `2d826cf9e6d96f8498411ea945494cabdd0dd7a8`, there was an issue where BMO statements in Jan would have the incorrect year set.
+
 ## Features of this fork
 - Removed unneeded dependencies (The original repo actually only used PDFPlumber to parse, not sure why there was tabular left in there)
 - Removed support for savings/chequing accounts (you shouldn't be spending out of a chequing account anyway, should be for bill payments only)
