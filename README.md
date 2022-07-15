@@ -91,7 +91,7 @@ Discrepancy found, bad parse :(
 ```
 This means that there are missing transactions not picked up by the regex because the math of starting balance minus the closing balance is not the net amount.
 
-The transaction regex is 3 parts because a transaction has 3 data points. The item in the regex array is named `txn`.
+The transaction regex is 3 parts because a transaction has 3 data points. The item in the regex array is named `txn`.  
 
 The regex is inbetween the `"`'s, and this is what you put in the simulators.
 ```python
