@@ -89,6 +89,21 @@ If you see:
 Error for statements/BMO/eStatement_2019-05-07.pdf
 Discrepancy found, bad parse :(
 ```
+This means that there are missing transactions not picked up by the regex because the math of starting balance minus the closing balance is not the net amount.
+
+The transaction regex is 3 parts because a transaction has 3 data points. The item in the regex array is named `txn`.
+
+The regex is inbetween the `"`'s, and this is what you put in the simulators.
+```python
+# date
+r"^(?P<dates>(?:\w{3}(\.|)+ \d{1,2} ){2})"
+
+# description
+r"(?P<description>.+)\s"
+
+# amount
+r"(?P<amount>-?[\d,]+\.\d{2})(?P<cr>(\-|\s?CR))?"
+```
 
 1. Turn on debug mode in `teller/pdf_processor.py` by setting `debug = True`  
 2. Run it again just on the error statement by moving the other statements out of the dir or into a sub dir  

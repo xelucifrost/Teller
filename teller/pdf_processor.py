@@ -149,7 +149,7 @@ def _validate(closing_bal, opening_bal, transactions):
         print("* Parsed transactions:")
         for t in sorted(list(transactions), key=lambda t: t.date):
             print(t)
-        raise AssertionError("Discrepancy found, bad parse :(")
+        raise AssertionError("Discrepancy found, bad parse :(. Not all transcations are accounted for, validate your transaction regex.")
 
 def _get_start_year(pdf_text, fi):
     print("Getting year...")
