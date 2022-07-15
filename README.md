@@ -1,4 +1,4 @@
-# Teller - Canadian Bank PDF to SQLite/CSV 
+# Teller - Canadian Bank e-Statement PDF to SQLite/CSV 
 
 Because some FIs don't let you download .csvs for transactions older than 6 months ago because ???, this abomination of a tool exists.
 
