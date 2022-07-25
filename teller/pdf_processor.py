@@ -83,7 +83,7 @@ def _parse_visa(pdf_path):
         closing_bal = _get_closing_bal(text, TARGET_FI)
         # add_seconds = 0
         
-        endOfYearWarning = True
+        endOfYearWarning = False
 
         # debugging transaction mapping - all 3 regex in 'txn' have to find a result in order for it to be considered a 'match'
         for match in re.finditer(regexes[TARGET_FI]['txn'], text, re.MULTILINE):
