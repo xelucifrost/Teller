@@ -6,7 +6,7 @@ tl;dr - this parses PDFs with pdfplumber into text, then runs a bunch of regex o
 
 
 ## Issues
-- Pre-commit `2d826cf9e6d96f8498411ea945494cabdd0dd7a8`, there was an issue where statements in Jan would have the incorrect year set.
+- Pre-commit [`2d826cf9e6d96f8498411ea945494cabdd0dd7a8`](https://github.com/Bizzaro/Teller/commit/2d826cf9e6d96f8498411ea945494cabdd0dd7a8), there was an issue where statements in Jan would have the incorrect year set.
 	- Remediation: Delete all Dec transactions for all years, re-parse Jan statements.
  
 ## Features of this fork
