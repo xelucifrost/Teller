@@ -16,7 +16,7 @@ regexes = {
         'txn': (r"^(?P<dates>(?:\w{3}(\.|)+ \d{1,2} ){2})"
             r"(?P<description>.+)\s"
             r"(?P<amount>-?[\d,]+\.\d{2})(?P<cr>(\-|\s?CR))?"),
-        'startyear': r'PERIOD COVERED BY THIS STATEMENT\n\w+\.\s{1}\d+\,\s{1}(?P<year>[0-9]{4})',
+        'startyear': r'PERIOD COVERED BY THIS STATEMENT\n\w+\.?\s{1}\d+\,\s{1}(?P<year>[0-9]{4})',
         'openbal': r'Previous Balance.*(?P<balance>-?\$[\d,]+\.\d{2})(?P<cr>(\-|\s?CR))?',
         'closingbal': r'(?:New) Balance,.* (?P<balance>-?\$[\d,]+\.\d{2})(?P<cr>(\-|\s?CR))?'
     },
