@@ -13,12 +13,12 @@ debug = False # prints out one parsed PDF for you to manually test regex on
 
 regexes = {
     'BMO': {
-        'txn': (r"^(?P<dates>(?:\w{3}(\.|)+ \d{1,2} ){2})"
+        'txn': (r"^(?P<dates>(?:\w{3}(\.|)+ \d{1,2}\s*){2})"
             r"(?P<description>.+)\s"
-            r"(?P<amount>-?[\d,]+\.\d{2})(?P<cr>(\-|\s?CR))?"),
-        'startyear': r'PERIOD COVERED BY THIS STATEMENT\n\w+\.?\s{1}\d+\,\s{1}(?P<year>[0-9]{4})',
-        'openbal': r'Previous Balance.*(?P<balance>-?\$[\d,]+\.\d{2})(?P<cr>(\-|\s?CR))?',
-        'closingbal': r'(?:New) Balance,.* (?P<balance>-?\$[\d,]+\.\d{2})(?P<cr>(\-|\s?CR))?'
+            r"(?P<amount>-?[\d,]+\.\d{2})(?P<cr>(\-|\s*CR))?"),
+        'startyear': r'Statement period\s\w+\.?\s{1}\d+\,\s{1}(?P<year>[0-9]{4})',
+        'openbal': r'Previous balance.*(?P<balance>-?\$[\d,]+\.\d{2})(?P<cr>(\-|\s?CR))?',
+        'closingbal': r'(?:Total) balance\s.*(?P<balance>-?\$[\d,]+\.\d{2})(?P<cr>(\-|\s?CR))?'
     },
     'RBC': {
         'txn': (r"^(?P<dates>(?:\w{3} \d{2} ){2})"
